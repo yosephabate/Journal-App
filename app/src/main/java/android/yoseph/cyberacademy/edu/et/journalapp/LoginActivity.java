@@ -150,14 +150,14 @@ public class LoginActivity extends AppCompatActivity implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            Task<GoogleSignInAccount> journal = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(journal);
         }
     }
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+    private void handleSignInResult(Task<GoogleSignInAccount> completedJournal) {
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            GoogleSignInAccount account = completedJournal.getResult(ApiException.class);
             mCurrentSignInUser = account.getEmail();
             Log.d("TTT", mCurrentSignInUser);
             updateUI(account);

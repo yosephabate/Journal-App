@@ -44,7 +44,7 @@
                 android:value="android.yoseph.cyberacademy.edu.et.journalapp.LoginActivity"/>
         </activity>
 
-        <activity android:name=".AddTaskActivity"
+        <activity android:name=".AddJournalActivity"
                   android:label="@string/add_task_activity_name"/>
     </application>
 

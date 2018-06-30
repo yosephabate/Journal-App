@@ -16,19 +16,17 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.yoseph.cyberacademy.edu.et.journalapp.database.AppDatabase;
-import android.yoseph.cyberacademy.edu.et.journalapp.database.TaskEntry;
+import android.yoseph.cyberacademy.edu.et.journalapp.database.JournalEntry;
 
 import java.util.List;
 
-import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
-
-public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemClickListener {
+public class MainActivity extends AppCompatActivity implements JournalAdapter.ItemClickListener {
 
     // Constant for logging
     private static final String TAG = MainActivity.class.getSimpleName();
     // Member variables for the adapter and RecyclerView
     private RecyclerView mRecyclerView;
-    private TaskAdapter mAdapter;
+    private JournalAdapter mAdapter;
 
     private AppDatabase mDb;
     public static String mCurrentSignInUser;
@@ -49,9 +47,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Create a new intent to start an AddTaskActivity
-                Intent addTaskIntent = new Intent(MainActivity.this, AddTaskActivity.class);
-                startActivity(addTaskIntent);
+                // Create a new intent to start an AddJournalActivity
+                Intent addJournalIntent = new Intent(MainActivity.this, AddJournalActivity.class);
+                startActivity(addJournalIntent);
             }
         });
 
@@ -60,14 +58,14 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set the RecyclerView to its corresponding view
-        mRecyclerView = findViewById(R.id.recyclerViewTasks);
+        mRecyclerView = findViewById(R.id.recyclerViewJournals);
 
         // Set the layout for the RecyclerView to be a linear layout, which measures and
         // positions items within a RecyclerView into a linear list
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the adapter and attach it to the RecyclerView
-        mAdapter = new TaskAdapter(this, this);
+        mAdapter = new JournalAdapter(this, this);
         mRecyclerView.setAdapter(mAdapter);
 
         //DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), VERTICAL);
@@ -75,11 +73,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, 0));
 
-        /*
-         Add a touch helper to the RecyclerView to recognize when a user swipes to delete an item.
-         An ItemTouchHelper enables touch behavior (like swipe and move) on each ViewHolder,
-         and uses callbacks to signal when a user is performing these actions.
-         */
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -94,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
                     @Override
                     public void run() {
                         int position = viewHolder.getAdapterPosition();
-                        List<TaskEntry> tasks = mAdapter.getTasks();
-                        mDb.taskDao().deleteTask(tasks.get(position));
+                        List<JournalEntry> journals = mAdapter.getJournals();
+                        mDb.journalDao().deleteJournal(journals.get(position));
                     }
                 });
             }
@@ -116,20 +109,20 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
 
     private void setupViewModel() {
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.getTasks().observe(this, new Observer<List<TaskEntry>>() {
+        viewModel.getJournals().observe(this, new Observer<List<JournalEntry>>() {
             @Override
-            public void onChanged(@Nullable List<TaskEntry> taskEntries) {
-                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
-                mAdapter.setTasks(taskEntries);
+            public void onChanged(@Nullable List<JournalEntry> journalEntries) {
+                Log.d(TAG, "Updating list of journals from LiveData in ViewModel");
+                mAdapter.setJournals(journalEntries);
             }
         });
     }
 
     @Override
     public void onItemClickListener(int itemId) {
-        // Launch AddTaskActivity adding the itemId as an extra in the intent
-        Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
-        intent.putExtra(AddTaskActivity.EXTRA_TASK_ID, itemId);
+        // Launch AddJournalActivity adding the itemId as an extra in the intent
+        Intent intent = new Intent(MainActivity.this, AddJournalActivity.class);
+        intent.putExtra(AddJournalActivity.EXTRA_JOURNAL_ID, itemId);
         startActivity(intent);
     }
 

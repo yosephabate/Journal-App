@@ -25,7 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.yoseph.cyberacademy.edu.et.journalapp.database.TaskEntry;
+import android.yoseph.cyberacademy.edu.et.journalapp.database.JournalEntry;
 
 
 import java.text.SimpleDateFormat;
@@ -33,29 +33,29 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * This TaskAdapter creates and binds ViewHolders, that hold the description and priority of a task,
+ * This JournalAdapter creates and binds ViewHolders, that hold the description and priority of a journal,
  * to a RecyclerView to efficiently display data.
  */
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalViewHolder> {
 
     // Constant for date format
     private static final String DATE_FORMAT = "dd/MM/yyy";
 
     // Member variable to handle item clicks
     final private ItemClickListener mItemClickListener;
-    // Class variables for the List that holds task data and the Context
-    private List<TaskEntry> mTaskEntries;
+    // Class variables for the List that holds journal data and the Context
+    private List<JournalEntry> mJournalEntries;
     private Context mContext;
     // Date formatter
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
     /**
-     * Constructor for the TaskAdapter that initializes the Context.
+     * Constructor for the JournalAdapter that initializes the Context.
      *
      * @param context  the current Context
      * @param listener the ItemClickListener
      */
-    public TaskAdapter(Context context, ItemClickListener listener) {
+    public JournalAdapter(Context context, ItemClickListener listener) {
         mContext = context;
         mItemClickListener = listener;
     }
@@ -63,15 +63,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     /**
      * Called when ViewHolders are created to fill a RecyclerView.
      *
-     * @return A new TaskViewHolder that holds the view for each task
+     * @return A new JournalViewHolder that holds the view for each journal
      */
     @Override
-    public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Inflate the task_layout to a view
+    public JournalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // Inflate the journal_layout to a view
         View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.task_layout, parent, false);
+                .inflate(R.layout.journal_layout, parent, false);
 
-        return new TaskViewHolder(view);
+        return new JournalViewHolder(view);
     }
 
     /**
@@ -81,17 +81,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
      * @param position The position of the data in the Cursor
      */
     @Override
-    public void onBindViewHolder(TaskViewHolder holder, int position) {
+    public void onBindViewHolder(JournalViewHolder holder, int position) {
         // Determine the values of the wanted data
-        TaskEntry taskEntry = mTaskEntries.get(position);
-        String description = taskEntry.getDescription();
-        int priority = taskEntry.getPriority();
-        String user = taskEntry.getUser();
-        Log.d("TTT", user);
-        String updatedAt = dateFormat.format(taskEntry.getUpdatedAt());
+        JournalEntry journalEntry = mJournalEntries.get(position);
+        String description = journalEntry.getDescription();
+        int priority = journalEntry.getPriority();
+        String user = journalEntry.getUser();
+        //Log.d("TTT", user);
+        String updatedAt = dateFormat.format(journalEntry.getUpdatedAt());
 
         //Set values
-        holder.taskDescriptionView.setText(description);
+        holder.journalDescriptionView.setText(description);
         holder.updatedAtView.setText(updatedAt);
         holder.userView.setText(user);
 
@@ -133,22 +133,22 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
      */
     @Override
     public int getItemCount() {
-        if (mTaskEntries == null) {
+        if (mJournalEntries == null) {
             return 0;
         }
-        return mTaskEntries.size();
+        return mJournalEntries.size();
     }
 
-    public List<TaskEntry> getTasks() {
-        return mTaskEntries;
+    public List<JournalEntry> getJournals() {
+        return mJournalEntries;
     }
 
     /**
-     * When data changes, this method updates the list of taskEntries
+     * When data changes, this method updates the list of journalEntries
      * and notifies the adapter to use the new values on it
      */
-    public void setTasks(List<TaskEntry> taskEntries) {
-        mTaskEntries = taskEntries;
+    public void setJournals(List<JournalEntry> journalEntries) {
+        mJournalEntries = journalEntries;
         notifyDataSetChanged();
     }
 
@@ -157,32 +157,32 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     // Inner class for creating ViewHolders
-    class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class JournalViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        // Class variables for the task description and priority TextViews
-        TextView taskDescriptionView;
+        // Class variables for the journal description and priority TextViews
+        TextView journalDescriptionView;
         TextView updatedAtView;
         TextView userView;
         TextView priorityView;
 
         /**
-         * Constructor for the TaskViewHolders.
+         * Constructor for the JournalViewHolders.
          *
          * @param itemView The view inflated in onCreateViewHolder
          */
-        public TaskViewHolder(View itemView) {
+        public JournalViewHolder(View itemView) {
             super(itemView);
 
-            taskDescriptionView = itemView.findViewById(R.id.taskDescription);
-            updatedAtView = itemView.findViewById(R.id.taskUpdatedAt);
-            userView = itemView.findViewById(R.id.taskUser);
+            journalDescriptionView = itemView.findViewById(R.id.journalDescription);
+            updatedAtView = itemView.findViewById(R.id.journalUpdatedAt);
+            userView = itemView.findViewById(R.id.journalUser);
             priorityView = itemView.findViewById(R.id.priorityTextView);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            int elementId = mTaskEntries.get(getAdapterPosition()).getId();
+            int elementId = mJournalEntries.get(getAdapterPosition()).getId();
             mItemClickListener.onItemClickListener(elementId);
         }
     }
